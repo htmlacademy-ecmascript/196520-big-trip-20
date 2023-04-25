@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Maria Angelova](https://up.htmlacademy.ru/ecmascript/20/user/196520).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Конотоп](https://htmlacademy.ru/profile/sineway).
 
 ---
 
