@@ -1,6 +1,5 @@
 import { createElement } from '../render.js';
 
-
 function createListSortTemplate() {
   return (
     `<div class="trip-sort__item  trip-sort__item--day">
