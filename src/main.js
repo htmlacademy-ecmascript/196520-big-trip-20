@@ -1,20 +1,40 @@
-import {render} from './render.js';
-import ListFiltersView from './view/list-filters-view.js';
-import ListSortView from './view/list-sort-view.js';
-import WaypointListPresenter from './view/waypoint-item-view.js';
-import TripEventList from './view/trip-event-list';
+import './views/brief-view.js';
+import './views/add-view.js';
+import './views/filter-view.js';
+import './views/sort-view.js';
+import './views/list-view.js';
 
+/**
+ * @type {BriefView}
+ */
 
-const siteHeaderElement = document.querySelector('.page-header');
-const listFiltersContainer = siteHeaderElement.querySelector('.trip-controls__filters');
+const briefView = document.querySelector('brief-view');
 
-const siteMainElement = document.querySelector('.page-main');
-const tripEventsContainer = siteMainElement.querySelector('.trip-events');
+/**
+ * @type {AddView}
+ */
+const addView = document.querySelector('add-view');
 
+/**
+ * @type {FilterView}
+ */
 
-render(new ListSortView(), tripEventsContainer);
-render(new TripEventList(), tripEventsContainer);
-render(new ListFiltersView(), listFiltersContainer);
+const filterView = document.querySelector('filter-view');
 
-const waypointListPresenter = new WaypointListPresenter({waypointListContainer: tripEventsContainer});
-waypointListPresenter.init();
+/**
+ * @type {SortView}
+ */
+
+const sortView = document.querySelector('sort-view');
+
+/**
+ * @type {ListView}
+ */
+
+const listView = document.querySelector('list-view');
+
+briefView.render();
+addView.render();
+filterView.render();
+sortView.render();
+listView.render();
