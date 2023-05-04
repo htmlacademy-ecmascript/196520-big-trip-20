@@ -2,7 +2,6 @@ import View from './view.js';
 import {html} from '../utils.js';
 
 class AddView extends View {
-
   /**
    * @override
    */

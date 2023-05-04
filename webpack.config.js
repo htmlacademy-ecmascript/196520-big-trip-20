@@ -26,7 +26,7 @@ module.exports = {
     }),
   ],
   module: {
-    rules: [ // Добавляем лоадеры
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules)/,

@@ -1,6 +1,10 @@
+import './editor-view.css';
 import View from './view.js';
 import {html} from '../utils.js';
 
+/**
+ * @extends {View<PointViewState>}
+ */
 class EditorView extends View {
   /**
    * @override
@@ -19,7 +23,7 @@ class EditorView extends View {
         </header>
         <section class="event__details">
           ${this.createOfferListFieldHtml()}
-          ${this. createDestinationHtml()}
+          ${this.createDestinationHtml()}
         </section>
       </form>
     `;
@@ -29,42 +33,27 @@ class EditorView extends View {
    * @return {SafeHtml}
    */
   createTypeFieldHtml() {
+    const point = this.state;
+    const type = point.types.find((it) => it.isSelected);
+
     return html`
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img
-            class="event__type-icon"
-            src="img/icons/flight.png"
-            alt="Event type icon"
-            width="17"
-            height="17"
-          />
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${type.value}.png" alt="Event type icon">
         </label>
-        <input
-          class="event__type-toggle  visually-hidden"
-          id="event-type-toggle-1"
-          type="checkbox"
-        />
+        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
 
-            <div class="event__type-item">
-              <input
-                id="event-type-taxi-1"
-                class="event__type-input  visually-hidden"
-                type="radio"
-                name="event-type"
-                value="taxi"
-              />
-              <label
-                class="event__type-label  event__type-label--taxi"
-                for="event-type-taxi-1"
-                >Taxi</label>
-            </div>
-
+            ${point.types.map((it) => html`
+              <div class="event__type-item">
+                <input id="event-type-${it.value}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${it.value}" ${it.isSelected ? 'checked' : ''}>
+                <label class="event__type-label  event__type-label--${it.value}" for="event-type-${it.value}-1">${it.value}</label>
+              </div>
+            `)}
           </fieldset>
         </div>
       </div>
@@ -75,16 +64,20 @@ class EditorView extends View {
    * @return {SafeHtml}
    */
   createDestinationFieldHtml() {
+    const point = this.state;
+    const type = point.types.find((it) => it.isSelected);
+    const destination = point.destinations.find((it) => it.isSelected);
+
     return html`
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
-          Flight
+          ${type.value}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+          ${point.destinations.map((it) => html`
+            <option value="${it.name}"></option>
+          `)}
         </datalist>
       </div>
     `;
@@ -94,13 +87,15 @@ class EditorView extends View {
    * @return {SafeHtml}
    */
   createScheduleFieldHtml() {
+    const point = this.state;
+
     return html`
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${point.startDateTime}">
         —
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${point.endDateTime}">
       </div>
     `;
   }
@@ -109,13 +104,15 @@ class EditorView extends View {
    * @return {SafeHtml}
    */
   createPriceFieldHtml() {
+    const point = this.state;
+
     return html`
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">Price</span>
           €
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${point.basePrice}">
       </div>
     `;
   }
@@ -143,9 +140,9 @@ class EditorView extends View {
    */
   createCloseButtonHtml() {
     return html`
-    <button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Close event</span>
+      </button>
     `;
   }
 
@@ -153,41 +150,23 @@ class EditorView extends View {
    * @return {SafeHtml}
    */
   createOfferListFieldHtml() {
+    const point = this.state;
+
     return html`
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">
-          Offers
-        </h3>
+      <section class="event__section  event__section--offers" ${point.offers.length ? '' : 'hidden'}>
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-          <div class="event__offer-selector">
-            <input
-              class="event__offer-checkbox  visually-hidden"
-              id="event-offer-luggage-1"
-              type="checkbox"
-              name="event-offer-luggage"
-              checked=""
-            />
-            <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">Add luggage</span>
-              +€&nbsp;
-              <span class="event__offer-price">30</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input
-              class="event__offer-checkbox  visually-hidden"
-              id="event-offer-comfort-1"
-              type="checkbox"
-              name="event-offer-comfort"
-            />
-            <label class="event__offer-label" for="event-offer-comfort-1">
-              <span class="event__offer-title">Switch to comfort class</span>
-              +€&nbsp;
-              <span class="event__offer-price">100</span>
-            </label>
-          </div>
+          ${point.offers.map((it) => html`
+            <div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${it.id}" type="checkbox" name="event-offer" ${it.isSelected ? 'checked' : ''}>
+              <label class="event__offer-label" for="event-offer-${it.id}">
+                <span class="event__offer-title">${it.title}</span>
+                +€&nbsp;
+                <span class="event__offer-price">${it.price}</span>
+              </label>
+            </div>
+          `)}
         </div>
       </section>
     `;
@@ -197,46 +176,23 @@ class EditorView extends View {
    * @return {SafeHtml}
    */
   createDestinationHtml() {
+    const point = this.state;
+    const destination = point.destinations.find((it) => it.isSelected);
+
     return html`
       <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">
-          Destination
-        </h3>
-        <p class="event__destination-description">
-          Geneva is a city in Switzerland that lies at the southern tip of
-          expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura
-          mountains, the city has views of dramatic Mont Blanc.
-        </p>
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        <p class="event__destination-description">${destination.description}</p>
 
-        <div class="event__photos-container">
-          <div class="event__photos-tape">
-            <img
-              class="event__photo"
-              src="img/photos/1.jpg"
-              alt="Event photo"
-            />
-            <img
-              class="event__photo"
-              src="img/photos/2.jpg"
-              alt="Event photo"
-            />
-            <img
-              class="event__photo"
-              src="img/photos/3.jpg"
-              alt="Event photo"
-            />
-            <img
-              class="event__photo"
-              src="img/photos/4.jpg"
-              alt="Event photo"
-            />
-            <img
-              class="event__photo"
-              src="img/photos/5.jpg"
-              alt="Event photo"
-            />
+        ${destination.pictures.length ? html`
+          <div class="event__photos-container">
+            <div class="event__photos-tape">
+              ${destination.pictures.map((it) => html`
+                <img class="event__photo" src="${it.src}" alt="${it.description}">
+              `)}
+            </div>
           </div>
-        </div>
+        ` : ''}
       </section>
     `;
   }
