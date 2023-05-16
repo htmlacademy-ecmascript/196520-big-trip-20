@@ -9,7 +9,6 @@ class AddPresenter extends Presenter {
    * @return {AddViewState}
    */
   createViewState() {
-    // TODO: AddViewState
     return {
       isDisabled: false,
     };
