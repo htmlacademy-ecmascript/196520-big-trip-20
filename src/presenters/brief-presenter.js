@@ -9,7 +9,6 @@ class BriefPresenter extends Presenter {
    * @return {BriefViewState}
    */
   createViewState() {
-    // TODO: BriefViewState
     return {
       places: 'Amsterdam — Chamonix — Geneva',
       dates: 'Mar 18 — 20',
