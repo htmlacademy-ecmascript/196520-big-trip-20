@@ -1,5 +1,5 @@
 import Presenter from './presenter.js';
-import {formatDate, formatDuration, formatTime} from '../utils.js';
+import { formatDate, formatDuration, formatTime } from '../utils.js';
 
 /**
  * @extends {Presenter<ListView, AppModel>}
@@ -10,10 +10,14 @@ class ListPresenter extends Presenter {
    * @return {ListViewState}
    */
   createViewState() {
-    const points = this.model.getPoints();
+    /**
+   * @type {UrlParams}
+   */
+    const urlParams = this.getUrlParams();
+    const points = this.model.getPoints(urlParams);
     const items = points.map(this.createPointViewState, this);
 
-    return {items};
+    return { items };
   }
 
   /**
@@ -88,8 +92,8 @@ class ListPresenter extends Presenter {
     };
 
     /**
-           * @param {CustomEvent & {target: CardView}} event
-           */
+     * @param {CustomEvent & {target: CardView}} event
+     */
     const handleViewFavorite = (event) => {
       const card = event.target;
       const point = card.state;
