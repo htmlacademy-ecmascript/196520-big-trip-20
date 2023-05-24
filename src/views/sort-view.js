@@ -28,7 +28,7 @@ class SortView extends View {
   createItemHtml(state) {
     return html`
       <div class="trip-sort__item  trip-sort__item--${state.value}">
-        <input ${state.isDisabled ? 'disabled' : ''} ${state.isSelected ? 'selected' : ''} id="sort-${state.value}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${state.value}">
+        <input ${state.isSelected ? 'checked' : ''} ${state.isDisabled ? 'disabled' : ''} id="sort-${state.value}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${state.value}">
         <label class="trip-sort__btn" for="sort-${state.value}">${state.value}</label>
       </div>
     `;
