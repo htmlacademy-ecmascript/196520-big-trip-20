@@ -38,7 +38,7 @@ class SortPresenter extends Presenter {
   /**
    * @param {Event & {target: {value: SortType}}} event
    */
-  handleViewChange (event) {
+  handleViewChange(event) {
     /**
      * @type {UrlParams}
      */
