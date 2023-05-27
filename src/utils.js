@@ -32,9 +32,11 @@ function formatDuration(startDateTime, endDateTime) {
   if (duration.days()) {
     return duration.format('DD[d] HH[h] mm[m]');
   }
+
   if (duration.hours()) {
     return duration.format('HH[h] mm[m]');
   }
+
   return duration.format('mm[m]');
 }
 
@@ -48,6 +50,10 @@ class SafeHtml extends String {}
 function html(strings, ...values) {
   const result = strings.reduce((before, after, index) => {
     const value = values[index - 1];
+
+    if (value === undefined) {
+      return before + after;
+    }
 
     if (Array.isArray(value) && value.every((it) => it instanceof SafeHtml)) {
       return before + value.join('') + after;
