@@ -49,8 +49,21 @@ function formatDuration(startDateTime, endDateTime) {
  */
 
 function createDatePickrs(startDateField, endDateField) {
-  const startDatePickr = flatpickr(startDateField);
-  const endDatepickr = flatpickr(endDateField);
+  /**
+   * @type {FlatpickrOptions}
+   */
+  const options = {
+    monthSelectorType: 'static',
+    dateFormat: 'Z',
+    altInput: true,
+    altFormat: 'd/m/y H:i',
+    locale: {firstDayOfWeek: 1},
+    enableTime: true,
+    'time_24hr': true
+  };
+
+  const startDatePickr = flatpickr(startDateField, options);
+  const endDatepickr = flatpickr(endDateField, options);
 
   return () => {
     startDatePickr.destroy();
