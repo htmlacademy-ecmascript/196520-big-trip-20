@@ -63,11 +63,14 @@ function createDatePickrs(startDateField, endDateField) {
   };
 
   const startDatePickr = flatpickr(startDateField, options);
-  const endDatepickr = flatpickr(endDateField, options);
+  const endDatePickr = flatpickr(endDateField, options);
+
+  startDatePickr.set('onChange', (dates) => endDatePickr.set('minDate', dates.at(0)));
+  endDatePickr.set('minDate', startDatePickr.selectedDates.at(0));
 
   return () => {
     startDatePickr.destroy();
-    endDatepickr.destroy();
+    endDatePickr.destroy();
   };
 }
 
