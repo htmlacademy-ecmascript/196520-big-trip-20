@@ -14,7 +14,7 @@ class AppModel extends Model {
   #filterCallbackMap = {
     everything: () => true,
     future: (it) => Date.parse(it.startDateTime) > Date.now() ,
-    present: () => true,
+    present: (it) => !this.#filterCallbackMap.past(it) && !this.#filterCallbackMap.future(it),
     past: (it) => Date.parse(it.endDateTime) < Date.now(),
   };
 
