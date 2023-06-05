@@ -1,5 +1,5 @@
 /**
- * @typedef {import('flatpickr/dist/types/options.js').Options} FlatpickrOptions
+ * @typedef {import('flatpickr/dist/types/options').Options} FlatpickrOptions
  */
 
 /**
