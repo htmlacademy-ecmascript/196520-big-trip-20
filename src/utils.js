@@ -7,11 +7,31 @@ import 'flatpickr/dist/flatpickr.css';
 dayjs.extend(durationPlugin);
 
 /**
- * @param {string} dateTime
+ * @param {string | dayjs.Dayjs} dateTime
+ * @param {boolean} [isNarrow]
  * @return {string}
  */
-function formatDate(dateTime) {
-  return dayjs(dateTime).format('MMM D');
+function formatDate(dateTime, isNarrow) {
+  return dayjs(dateTime).format(isNarrow ? 'D' : 'MMM D');
+}
+
+/**
+ * @param {string} startDateTime
+ * @param {string} endDateTime
+ * @return {string}
+ */
+function formatDateRange(startDateTime, endDateTime) {
+  const start = dayjs(startDateTime);
+  const end = dayjs(endDateTime);
+
+  if (start.isSame(end, 'day')) {
+    return formatDate(start);
+  }
+
+  return [
+    formatDate(start),
+    formatDate(end, start.isSame(end, 'month'))
+  ].join(' — ');
 }
 
 /**
@@ -45,10 +65,9 @@ function formatDuration(startDateTime, endDateTime) {
 /**
  * @param {HTMLInputElement} startDateField
  * @param {HTMLInputElement} endDateField
- * @return {()=> void}
+ * @return {() => void}
  */
-
-function createDatePickrs(startDateField, endDateField) {
+function createDatePickers(startDateField, endDateField) {
   /**
    * @type {FlatpickrOptions}
    */
@@ -59,18 +78,18 @@ function createDatePickrs(startDateField, endDateField) {
     altFormat: 'd/m/y H:i',
     locale: {firstDayOfWeek: 1},
     enableTime: true,
-    'time_24hr': true
+    'time_24hr': true,
   };
 
-  const startDatePickr = flatpickr(startDateField, options);
-  const endDatePickr = flatpickr(endDateField, options);
+  const startDatePicker = flatpickr(startDateField, options);
+  const endDatePicker = flatpickr(endDateField, options);
 
-  startDatePickr.set('onChange', (dates) => endDatePickr.set('minDate', dates.at(0)));
-  endDatePickr.set('minDate', startDatePickr.selectedDates.at(0));
+  startDatePicker.set('onChange', (dates) => endDatePicker.set('minDate', dates.at(0)));
+  endDatePicker.set('minDate', startDatePicker.selectedDates.at(0));
 
   return () => {
-    startDatePickr.destroy();
-    endDatePickr.destroy();
+    startDatePicker.destroy();
+    endDatePicker.destroy();
   };
 }
 
@@ -103,4 +122,12 @@ function html(strings, ...values) {
   return new SafeHtml(result);
 }
 
-export {formatDate, formatTime, formatDuration, createDatePickrs, SafeHtml, html};
+export {
+  formatDate,
+  formatDateRange,
+  formatTime,
+  formatDuration,
+  createDatePickers,
+  SafeHtml,
+  html,
+};
