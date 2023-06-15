@@ -2,7 +2,7 @@
  * @abstract
  */
 
-class Model {
+class Model extends EventTarget {
   /**
    * @param {string} type
    * @param {any} [detail]
