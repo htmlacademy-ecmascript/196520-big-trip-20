@@ -95,6 +95,11 @@
  */
 
 /**
+ * @typedef OverlayViewState
+ * @prop {boolean} isActive
+ */
+
+/**
  * @typedef UrlParams
  * @prop {string} [edit]
  * @prop {FilterType} [filter]

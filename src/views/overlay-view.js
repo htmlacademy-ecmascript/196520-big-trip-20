@@ -38,3 +38,4 @@ class OverlayView extends View {
 customElements.define('overlay-view', OverlayView);
 
 export default OverlayView;
+
