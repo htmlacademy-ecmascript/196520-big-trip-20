@@ -1,6 +1,6 @@
 import './editor-view.css';
 import View from './view.js';
-import { createDatePickrs, html } from '../utils.js';
+import {createDatePickers, html} from '../utils.js';
 
 /**
  * @extends {View<PointViewState>}
@@ -8,9 +8,10 @@ import { createDatePickrs, html } from '../utils.js';
  */
 class EditorView extends View {
   /**
-   * @type {ReturnType<createDatePickrs>}
+   * @type {ReturnType<createDatePickers>}
    */
-  #destroyDatePickrs;
+  #destroyDatePickers;
+
   constructor() {
     super();
 
@@ -22,18 +23,17 @@ class EditorView extends View {
 
   connectedCallback() {
     /**
-     *@type {NodeListOf<HTMLInputElement>}
+     * @type {NodeListOf<HTMLInputElement>}
      */
     const dateFields = this.querySelectorAll('.event__input--time');
     const [startDateField, endDateField] = dateFields;
-    createDatePickrs(startDateField, endDateField);
 
-    this.#destroyDatePickrs = createDatePickrs(startDateField, endDateField);
+    this.#destroyDatePickers = createDatePickers(startDateField, endDateField);
     document.addEventListener('keydown', this);
   }
 
   disconnectedCallback() {
-    this.#destroyDatePickrs();
+    this.#destroyDatePickers();
     document.removeEventListener('keydown', this);
   }
 
@@ -218,6 +218,7 @@ class EditorView extends View {
         <button class="event__reset-btn" type="reset">Cancel</button>
       `;
     }
+
     return html`
       <button ${point.isDeleting ? 'disabled' : ''} class="event__reset-btn btn" type="reset">${point.isDeleting ? 'Deleting...' : 'Delete'}</button>
     `;
@@ -253,7 +254,7 @@ class EditorView extends View {
         <div class="event__available-offers">
           ${point.offers.map((it) => html`
             <div class="event__offer-selector">
-              <input class="event__offer-checkbox visually-hidden" id="event-offer-${it.id}" type="checkbox" name="event-offer" value="${it.id}" ${it.isSelected ? 'checked' : ''}>
+              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${it.id}" type="checkbox" name="event-offer" value="${it.id}" ${it.isSelected ? 'checked' : ''}>
               <label class="event__offer-label" for="event-offer-${it.id}">
                 <span class="event__offer-title">${it.title}</span>
                 +€&nbsp;

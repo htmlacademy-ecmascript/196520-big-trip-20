@@ -5,7 +5,6 @@ import {html} from '../utils.js';
  * @extends {View<PointViewState>}
  */
 class CardView extends View {
-
   constructor() {
     super();
 
@@ -13,7 +12,6 @@ class CardView extends View {
   }
 
   /**
-   *
    * @param {MouseEvent & {target: Element}} event
    */
   handleClick(event) {

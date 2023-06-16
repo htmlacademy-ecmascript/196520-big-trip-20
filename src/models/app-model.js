@@ -23,7 +23,7 @@ class AppModel extends Model {
    */
   #filterCallbackMap = {
     everything: () => true,
-    future: (it) => Date.parse(it.startDateTime) > Date.now() ,
+    future: (it) => Date.parse(it.startDateTime) > Date.now(),
     present: (it) => !this.#filterCallbackMap.past(it) && !this.#filterCallbackMap.future(it),
     past: (it) => Date.parse(it.endDateTime) < Date.now(),
   };
@@ -32,11 +32,11 @@ class AppModel extends Model {
    * @type {Record<SortType, (a: Point, b: Point) => number>}
    */
   #sortCallbackMap = {
-    day: (a, b) => Date.parse(a.startDateTime) - Date.parse(b.endDateTime),
+    day: (a, b) => Date.parse(a.startDateTime) - Date.parse(b.startDateTime),
     event: () => 0,
     time: (a, b) => AppModel.calcPointDuration(b) - AppModel.calcPointDuration(a),
     price: (a, b) => b.basePrice - a.basePrice,
-    offers: () => 0
+    offers: () => 0,
   };
 
   /**
@@ -71,15 +71,14 @@ class AppModel extends Model {
     }
   }
 
-
   /**
    * @param {{filter?: FilterType, sort?: SortType}} [criteria]
    * @return {Array<Point>}
    */
   getPoints(criteria = {}) {
     const adaptedPoints = this.#points.map(AppModel.adaptPointForClient);
-    const sortCallback = this.#sortCallbackMap[criteria.sort] ?? this.#sortCallbackMap.day;
     const filterCallback = this.#filterCallbackMap[criteria.filter] ?? this.#filterCallbackMap.everything;
+    const sortCallback = this.#sortCallbackMap[criteria.sort] ?? this.#sortCallbackMap.day;
 
     return adaptedPoints.filter(filterCallback).sort(sortCallback);
   }
@@ -95,6 +94,8 @@ class AppModel extends Model {
       const addedPoint = await this.#apiService.addPoint(adaptedPoint);
 
       this.#points.push(addedPoint);
+      this.notify('change');
+
     } finally {
       this.notify('idle');
     }
@@ -112,6 +113,7 @@ class AppModel extends Model {
       const index = this.#points.findIndex((it) => it.id === adaptedPoint.id);
 
       this.#points.splice(index, 1, updatedPoint);
+      this.notify('change');
 
     } finally {
       this.notify('idle');
@@ -129,6 +131,7 @@ class AppModel extends Model {
       const index = this.#points.findIndex((it) => it.id === id);
 
       this.#points.splice(index, 1);
+      this.notify('change');
 
     } finally {
       this.notify('idle');
@@ -146,7 +149,6 @@ class AppModel extends Model {
    * @return {Array<OfferGroup>}
    */
   getOfferGroups() {
-
     return structuredClone(this.#offerGroups);
   }
 
@@ -155,7 +157,7 @@ class AppModel extends Model {
    * @return {number}
    */
   static calcPointDuration(point) {
-    return Date.parse(point.startDateTime) - Date.parse(point.endDateTime);
+    return Date.parse(point.endDateTime) - Date.parse(point.startDateTime);
   }
 
   /**
@@ -191,7 +193,6 @@ class AppModel extends Model {
       'is_favorite': point.isFavorite,
     };
   }
-
 }
 
 export default AppModel;

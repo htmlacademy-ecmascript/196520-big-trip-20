@@ -88,12 +88,12 @@ class ListPresenter extends Presenter {
     return {
       id: point.id,
       type: point.types.find((it) => it.isSelected).value,
-      destinationId: point.destinations.find((it) => it.isSelected).id,
+      destinationId: point.destinations.find((it) => it.isSelected)?.id,
       startDateTime: point.startDateTime,
       endDateTime: point.endDateTime,
       basePrice: point.basePrice,
       offerIds: point.offers.filter((it) => it.isSelected).map((it) => it.id),
-      isFavorite: point.isFavorite
+      isFavorite: point.isFavorite,
     };
   }
 
@@ -248,4 +248,3 @@ class ListPresenter extends Presenter {
 }
 
 export default ListPresenter;
-
